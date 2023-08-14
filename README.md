@@ -1,6 +1,5 @@
 1. Install Mosquitto, tkinter, paho-mqtt:
 Open a terminal and run the following command to install Mosquitto using Homebrew:
-`source venv/bin/activate` or
 `brew install mosquitto`
 `pip install paho-mqtt`
 `brew install python-tk@3.9` <your python version>
@@ -16,5 +15,3 @@ Navigate to the script directory. Then, run the script using the following comma
 1. Run the Subscriber
 Run the script:
 `python subscriber.py`
-
-
