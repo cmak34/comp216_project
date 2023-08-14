@@ -6,14 +6,7 @@ import paho.mqtt.client as mqtt
 import json
 import time
 import random
-import numpy as np
-import tkinter as tk
 from threading import Thread
-import paho.mqtt.client as mqtt
-import json
-import time
-import random
-import numpy as np
 
 class GUI:
     def __init__(self, root):
