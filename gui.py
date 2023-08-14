@@ -14,36 +14,42 @@ class GUI:
         self.max_val = 50 # max value for temperature
         self.min_val = -40 # min value for temperature
         self.root.title("MQTT Data Publisher")
+
+        # Configure the grid weights
+        for i in range(5):
+            self.root.grid_rowconfigure(i, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
+        self.root.grid_columnconfigure(1, weight=1)
+
         self.proj_description = tk.Label(root, text="2 Publishers is running. Please choose one of them to start publishing.")
-        self.proj_description.grid(row=0, column=0)
+        self.proj_description.grid(row=0, column=0, columnspan=2, sticky='nsew')
         
         # publisher 1
         self.publisher1 = None
         self.publisher1_running = False
         self.publisher1_thread = None
         self.publisher1_label = tk.Label(root, text="Publisher 1:")
-        self.publisher1_label.grid(row=1, column=0)
+        self.publisher1_label.grid(row=1, column=0, sticky='nsew')
         self.publisher1_start_button = tk.Button(root, text="Start Publishing", command=self.start_publishing1)
-        self.publisher1_start_button.grid(row=2, column=0, pady=10)
+        self.publisher1_start_button.grid(row=2, column=0, pady=10, sticky='nsew')
         self.publisher1_stop_button = tk.Button(root, text="Stop Publishing", command=self.stop_publishing1)
-        self.publisher1_stop_button.grid(row=3, column=0, pady=10)
+        self.publisher1_stop_button.grid(row=3, column=0, pady=10, sticky='nsew')
         self.publisher1_log_text = tk.Text(root, height=10, width=40)
-        self.publisher1_log_text.grid(row=4, column=0, pady=10)
-        
-
+        self.publisher1_log_text.grid(row=4, column=0, pady=10, sticky='nsew')
         
         # publisher 2
         self.publisher2 = None
         self.publisher2_running = False
         self.publisher2_thread = None
         self.publisher2_label = tk.Label(root, text="Publisher 2:")
-        self.publisher2_label.grid(row=1, column=1)
+        self.publisher2_label.grid(row=1, column=1, sticky='nsew')
         self.publisher2_start_button = tk.Button(root, text="Start Publishing", command=self.start_publishing2)
-        self.publisher2_start_button.grid(row=2, column=1, pady=10)
+        self.publisher2_start_button.grid(row=2, column=1, pady=10, sticky='nsew')
         self.publisher2_stop_button = tk.Button(root, text="Stop Publishing", command=self.stop_publishing2)
-        self.publisher2_stop_button.grid(row=3, column=1, pady=10)
+        self.publisher2_stop_button.grid(row=3, column=1, pady=10, sticky='nsew')
         self.publisher2_log_text = tk.Text(root, height=10, width=40)
-        self.publisher2_log_text.grid(row=4, column=1, pady=10)
+        self.publisher2_log_text.grid(row=4, column=1, pady=10, sticky='nsew')
+
     
     def start_publishing1(self):
         if not self.publisher1_running:
