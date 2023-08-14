@@ -53,7 +53,7 @@ class GUI:
     
     def start_publishing1(self):
         if not self.publisher1_running:
-            self.publisher1 = Publisher(self.max_val, self.min_val)
+            self.publisher1 = Publisher(self.max_val, self.min_val, name="publisher1")
             self.publisher1_thread = Thread(target=self._publish_data1)
             self.publisher1_thread.start()
             self.publisher1_running = True
@@ -61,7 +61,7 @@ class GUI:
         
     def start_publishing2(self):
         if not self.publisher2_running:
-            self.publisher2 = Publisher(self.max_val, self.min_val)
+            self.publisher2 = Publisher(self.max_val, self.min_val, name="publisher2")
             self.publisher2_thread = Thread(target=self._publish_data2)
             self.publisher2_thread.start()
             self.publisher2_running = True
