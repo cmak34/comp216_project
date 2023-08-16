@@ -22,6 +22,7 @@ class Publisher:
         self.name = name
         self.missing_data_chance = missing_data_chance
         self.corrupted_data_chance = corrupted_data_chance
+        self.packet_id = 0
 
     # function to get the packet
     # @description: gets the packet from the data generator, also it will randomly corrupt the data and missing data based on the chances inputted
@@ -29,10 +30,10 @@ class Publisher:
     def get_packet(self):
         if random.randint(1, 100) <= self.missing_data_chance:  # chance of missing data in percentage
             return None
-
         temperature = self.generator.value
         packet = Util.create_data(temperature, self.name)
-
+        self.packet_id += 1
         if random.randint(1, 100) <= self.corrupted_data_chance:  # 10% chance of corrupted data in percentage
             packet["temperature"] = "corrupted"
+        packet["packet_id"] = self.packet_id
         return packet
