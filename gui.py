@@ -36,9 +36,10 @@ class GUI:
 
         INSTRUCTIONS:
         1. Start the MQTT broker (mosquitto) on localhost:1883
-        2. Click on the "Start Publishing" button to start publishing datas
-        3. Temperature data will be published to the broker every 1 second 
-           using random values between -40°C and 50°C with noise and following a sine wave pattern
+        2. Click on the "Add Publisher" button to add a publisher
+        3. Toggle the start/stop button to start/stop publishing data
+        4. Temperature data will be published to the broker every 1 second 
+           using random values with noise and following a sine wave pattern
         """, anchor='w', justify='left')
         self.proj_description.grid(row=0, column=0, columnspan=5, sticky='nsew')
 
@@ -76,7 +77,11 @@ class GUI:
     # @description - adds a publisher to the GUI
     def add_publisher(self):
         index = len(self.publisher)
-        pub = Publisher(Settings.get_max_val(),  Settings.get_min_val(), name="Station " + str(index + 1), missing_data_chance= Settings.get_missing_chance() if (self.missing_data_var.get()) else 0, corrupted_data_chance= Settings.get_corrupted_chance if (self.corrupted_data_var.get()) else 0)
+        max_val = Settings.get_max_val()
+        min_val = Settings.get_min_val()
+        missing_data_chance = Settings.get_missing_chance() if (self.missing_data_var.get()) else 0
+        corrupted_data_chance = Settings.get_corrupted_chance() if (self.corrupted_data_var.get()) else 0
+        pub = Publisher(max_val,  min_val, name="Station " + str(index + 1), missing_data_chance= missing_data_chance, corrupted_data_chance=corrupted_data_chance)
         self.publisher.append(pub)
         self.publisher_running.append(False)
         self.publisher_thread.append(Thread(target=self.publish_data, args=(index,)))
