@@ -10,14 +10,19 @@ class DataGenerator:
         self._time_step = 0
 
     def _generate_normalized_value(self):
-        sine_wave = (np.sin(2 * np.pi * self._time_step / self.frequency) + 1) / 2
-        noise_val = self.noise * random.uniform(-1, 1)
+        """Generate a normalized value in the range [-1, 1]"""
+        sine_wave = np.sin(2 * np.pi * self._time_step / self.frequency)
+        noise_val = self.noise * (2*random.random() - 1)
         self._time_step += 1
-        return sine_wave + noise_val
+        combined_value = sine_wave * (1 - self.noise) + noise_val
+        
+        # Clip the value to be in the range [-1, 1] 
+        # (this may not be necessary anymore, but it's a safe practice)
+        return np.clip(combined_value, -1, 1)
 
     @property
     def value(self):
         normalized_value = self._generate_normalized_value()
         range_val = self.max_val - self.min_val
-        output_value = self.min_val + range_val * normalized_value
+        output_value = self.min_val + (range_val * (normalized_value + 1) /2)
         return output_value
