@@ -91,19 +91,19 @@ class Subscriber:
                                         textcoords="offset points",
                                         ha='center',
                                         va='bottom',
-                                        fontsize=3)
+                                        fontsize=6)
         
                     # Annotate out of range data points
                     if key in self.out_of_range_data_points:
                         for index in self.out_of_range_data_points[key]:
-                            plt.annotate("out of range",
+                            plt.annotate("o",
                                         (index, self.min_val),
                                         color=color,
                                         xytext=(0, 5),
                                         textcoords="offset points",
                                         ha='center',
                                         va='bottom',
-                                        fontsize=3)
+                                        fontsize=6)
                             
                     # Annotate corrupted data points
                     if key in self.corrupted_data_points:
@@ -115,16 +115,16 @@ class Subscriber:
                                         textcoords="offset points",
                                         ha='center',
                                         va='bottom',
-                                        fontsize=3)
+                                        fontsize=6)
                     
                     counter += 1
                 
-                plt.xlabel('Packets', fontdict={'fontsize': 4, 'fontweight': 'light'}, labelpad=-2)
-                plt.ylabel('Temperature', fontdict={'fontsize': 4, 'fontweight': 'light'}, labelpad=-2) 
+                plt.xlabel('Packets', fontdict={'fontsize': 7, 'fontweight': 'light'}, labelpad=-2)
+                plt.ylabel('Temperature', fontdict={'fontsize': 7, 'fontweight': 'light'}, labelpad=-2) 
                 plt.ylim([self.min_val, self.max_val])
                 plt.xlim([0, self.buffer_size])
-                plt.tick_params(axis='x', labelsize=6)
-                plt.tick_params(axis='y', labelsize=6)
+                plt.tick_params(axis='x', labelsize=8)
+                plt.tick_params(axis='y', labelsize=8)
                 plt.title("Temperature Data from stations", fontdict={'fontsize': 6, 'fontweight': 'light'})
                 plt.legend(handles=handles, prop={'size': 6})
                 self.canvas.draw()
