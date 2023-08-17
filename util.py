@@ -1,13 +1,11 @@
 import time
-import random
-import string
 from settings import Settings
 
 class Util:
 
     def create_data(temperature, name, id):
         data = {
-            'station_name': name,  # Use the passed name here
+            'station_name': name,
             'timestamp': time.asctime(),
             'temperature': temperature,
             'packet_id': id
@@ -18,7 +16,7 @@ class Util:
         print(f"Station Name: {data['station_name']}")
         print(f"Packet ID: {data['packet_id']}")
         print(f"Time: {data['timestamp']}")
-        print(f"Temperature: {data['temperature']:.2f} °C")  # Two decimal places for temperature
+        print(f"Temperature: {data['temperature']:.2f} °C")
 
     def checkCorruptedDate(data):
         if data is None:

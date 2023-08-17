@@ -1,15 +1,14 @@
 import tkinter as tk
 import paho.mqtt.client as mqtt
-import numpy as np
 from publisher import Publisher
 import paho.mqtt.client as mqtt
 import json
 import time
-import random
 from threading import Thread
 import threading
 from subscriber import Subscriber
 from settings import Settings
+import subprocess
 
 class GUI:
     # constructor for the GUI
@@ -62,8 +61,8 @@ class GUI:
         corrupted_data_checkbox.grid(row=1, column=2, pady=5, sticky='w')
 
         # Add subscriber button
-        # add_subscriber_button = tk.Button(root, text="Add Subscriber", command=self.add_subscriber)
-        # add_subscriber_button.grid(row=1, column=3, pady=10, sticky='nsew')
+        add_subscriber_button = tk.Button(root, text="Add Subscriber", command=self.add_subscriber)
+        add_subscriber_button.grid(row=1, column=3, pady=10, sticky='nsew')
         
         # connect to the broker
         self.client = mqtt.Client()
@@ -114,24 +113,25 @@ class GUI:
             while True:
                 if self.publisher_running[index]:
                     packet = self.publisher[index].get_packet()
-    
-                    # Handle the None case
-                    if packet is None:
-                        self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + " Missing data detected\t\t---\n")
-                    else:
-                        self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + " (" + str(packet['packet_id']) + ")\t\t---\n")
-                        self.publisher_log_text[index].insert(tk.END, "Timestamp:\t\t" + str(packet["timestamp"]) + "\n")
-                        
-                        if type(packet["temperature"]) is str:
-                            self.publisher_log_text[index].insert(tk.END, "Temperature:\t\t" + str(packet["temperature"]) + "\n")
-                        elif packet["temperature"] is not None:
-                            self.publisher_log_text[index].insert(tk.END, "Temperature:\t\t{:.1f}".format(round(packet["temperature"], 1)) + "°C\n")
-    
-                        payload_str = json.dumps(packet)
-                        self.client.publish("topic/data", payload_str)
-    
-                    self.publisher_log_text[index].see(tk.END)
-    
+                    try:
+                        if packet is None:
+                            self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + " Missing data detected\t\t---\n")
+                        else:
+                            self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + " (" + str(packet['packet_id']) + ")\t\t---\n")
+                            self.publisher_log_text[index].insert(tk.END, "Timestamp:\t\t" + str(packet["timestamp"]) + "\n")
+                            
+                            if type(packet["temperature"]) is str:
+                                self.publisher_log_text[index].insert(tk.END, "Temperature:\t\t" + str(packet["temperature"]) + "\n")
+                            elif packet["temperature"] is not None:
+                                self.publisher_log_text[index].insert(tk.END, "Temperature:\t\t{:.1f}".format(round(packet["temperature"], 1)) + "°C\n")
+        
+                            payload_str = json.dumps(packet)
+                            self.client.publish("topic/data", payload_str)
+        
+                        self.publisher_log_text[index].see(tk.END)
+                    except Exception as e:
+                        self.publisher_log_text[index].insert(tk.END, f"Error publishing data: {e}\n")
+                        self.publisher_log_text[index].see(tk.END)
                 time.sleep(1)
     
         except Exception as e:
@@ -140,7 +140,16 @@ class GUI:
 
     
     def add_subscriber(self):
+        subscriber_thread = threading.Thread(target=self.run_subscriber)
+        subscriber_thread.start()
         print("Add subscriber")
+    
+    def run_subscriber(self):
+        try:
+            subprocess.run(["python", "subscriber.py"])
+        except Exception as e:
+            print(f"Error running subscriber: {e}")
+
         
 if __name__ == "__main__":
     root = tk.Tk()

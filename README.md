@@ -8,10 +8,6 @@ Open a terminal and run the following command to install Mosquitto using Homebre
 After installation, start the Mosquitto service using the following command:
 `brew services start mosquitto`
 
-1. Run the GUI:
+2. Run the GUI:
 Navigate to the script directory. Then, run the script using the following command:   
 `python gui.py`
-
-1. Run the Subscriber
-Run the script:
-`python subscriber.py`
