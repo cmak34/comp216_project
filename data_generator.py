@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 class DataGenerator:
-    def __init__(self, min_val=0, max_val=1, noise=0.1, frequency=100):
+    def __init__(self, min_val=0, max_val=1, noise=0.3, frequency=100):
         self.min_val = min_val
         self.max_val = max_val
         self.noise = noise
@@ -15,9 +15,6 @@ class DataGenerator:
         noise_val = self.noise * (2*random.random() - 1)
         self._time_step += 1
         combined_value = sine_wave * (1 - self.noise) + noise_val
-        
-        # Clip the value to be in the range [-1, 1] 
-        # (this may not be necessary anymore, but it's a safe practice)
         return np.clip(combined_value, -1, 1)
 
     @property

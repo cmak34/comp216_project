@@ -37,9 +37,7 @@ class Subscriber:
     # data: the data to plot
     def plot_data(self, data):
         if (data is not None and data["station_name"] is not None):
-            
             publisher = data["station_name"]
-
             # Check if self.data_buffers[publisher] exists
             if (data["station_name"] not in self.data_buffers):
                 self.data_buffers[data["station_name"]] = []
@@ -118,12 +116,19 @@ class Subscriber:
         self.canvas.get_tk_widget().grid(row=0, column=0, sticky='nsew')
     
     def generate_color(self, counter):
-        seed_red = 200 + counter
-        seed_green = 0 + counter
-        seed_blue = 100 + counter
-        r = (seed_red + 10 * counter) % 256  # Red
-        g = (seed_green + 30 * counter) % 256  # Green
-        b = (seed_blue + 60 * counter) % 256  # Blue
+        mode = counter % 3
+        seed_red = 200
+        seed_green = 0
+        seed_blue = 100
+        if mode == 0:
+            seed_red = 200 + counter * 20
+        if mode == 1:
+            seed_green = 200 + counter * 20
+        if mode == 2:
+            seed_blue = 200 + counter * 20
+        r = (seed_red) % 256  # Red
+        g = (seed_green) % 256  # Green
+        b = (seed_blue) % 256  # Blue
         return (r/255, g/255, b/255)  # Return the RGB color tuple
 
     # run the GUI

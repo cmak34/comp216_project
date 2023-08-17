@@ -31,9 +31,9 @@ class Publisher:
         if random.randint(1, 100) <= self.missing_data_chance:  # chance of missing data in percentage
             return None
         temperature = self.generator.value
-        packet = Util.create_data(temperature, self.name)
+        packet = Util.create_data(temperature, self.name, self.packet_id)
         self.packet_id += 1
-        if random.randint(1, 100) <= self.corrupted_data_chance:  # 10% chance of corrupted data in percentage
+        if random.randint(1, 100) <= self.corrupted_data_chance:  # chance of corrupted data in percentage
             packet["temperature"] = "corrupted"
         packet["packet_id"] = self.packet_id
         return packet

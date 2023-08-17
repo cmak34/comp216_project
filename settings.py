@@ -2,8 +2,8 @@ class Settings:
     MAX_VAL = 50.0 
     MIN_VAL = -50.0
     BUFFER_SIZE = 100
-    MISSING_CHANCE = 0.01
-    CORRUPTED_CHANCE = 0.01
+    MISSING_CHANCE = 1
+    CORRUPTED_CHANCE = 1
 
     @staticmethod
     def get_max_val():

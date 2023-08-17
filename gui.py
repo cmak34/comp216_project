@@ -116,14 +116,14 @@ class GUI:
                     packet = self.publisher[index].get_packet()
                     if packet is not None:
                         payload_str = json.dumps(packet)
-                        self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + "\t\t---\n")
+                        self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + " (" + str(packet['packet_id']) + ")\t\t---\n")
                         self.publisher_log_text[index].insert(tk.END, "Timestamp:\t\t" + str(packet["timestamp"]) + "\n")
                         if type(packet["temperature"]) is str:
                             self.publisher_log_text[index].insert(tk.END, "Temperature:\t\t" + str(packet["temperature"]) + "\n")
                         elif packet["temperature"] is not None:
                             self.publisher_log_text[index].insert(tk.END, "Temperature:\t\t{:.1f}".format(round(packet["temperature"], 1)) + "°C\n")
                     else:
-                        self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + "\t\t---\n")
+                        self.publisher_log_text[index].insert(tk.END, "\t---\tStation " + str(index + 1) + " (" + str(packet['packet_id']) + ")\t\t---\n")
                         self.publisher_log_text[index].insert(tk.END, "Missing data detected\n")
                     self.client.publish("topic/data", payload_str)
                     self.publisher_log_text[index].see(tk.END)
