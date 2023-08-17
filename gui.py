@@ -28,16 +28,17 @@ class GUI:
 
         GROUP MEMBERS:
         Chinnawut Boonluea (301276464)
-        Chung Ping Mak (301281670)
-        Ho Yin Yip (301288909)
-        Wing Chung Kam (301279106)
-        Yuen Kwan LI (301228849)
+        Chung Ping Mak     (301281670)
+        Ho Yin Yip         (301288909)
+        Wing Chung Kam     (301279106)
+        Yuen Kwan LI       (301228849)
 
         INSTRUCTIONS:
         1. Start the MQTT broker (mosquitto) on localhost:1883
         2. Click on the "Add Publisher" button to add a publisher
         3. Toggle the start/stop button to start/stop publishing data
-        4. Temperature data will be published to the broker every 1 second 
+        4. Add more subscriber by clicking the "Add Subscriber" button
+        5. Temperature data will be published to the broker every 1 second 
            using random values with noise and following a sine wave pattern
         """, anchor='w', justify='left')
         self.proj_description.grid(row=0, column=0, columnspan=5, sticky='nsew')

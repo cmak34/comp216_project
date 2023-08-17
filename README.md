@@ -2,7 +2,7 @@
 Open a terminal and run the following command to install Mosquitto using Homebrew:
 `brew install mosquitto`
 `pip install paho-mqtt`
-`brew install python-tk@3.9` <your python version>
+`brew install python-tk@<your python version>`
 
 1. Start Mosquitto service:
 After installation, start the Mosquitto service using the following command:
