@@ -2,6 +2,7 @@ import random
 from data_generator import DataGenerator
 from util import Util
 import random
+from settings import Settings
 
 class Publisher:
     
@@ -18,6 +19,8 @@ class Publisher:
             self.missing_data_chance = missing_data_chance
             self.corrupted_data_chance = corrupted_data_chance
             self.packet_id = 0
+            self.max_val = Settings.get_max_val()
+            self.min_val = Settings.get_min_val()
         except Exception as e:
             print(f"Error in __init__: {e}")
 
@@ -29,12 +32,13 @@ class Publisher:
             temperature = self.generator.value
             packet = Util.create_data(temperature, self.name, self.packet_id)
             self.packet_id += 1
+            packet["packet_id"] = self.packet_id
+            if temperature > self.max_val or temperature < self.min_val:
+                packet["temperature"] = "out of range"
             if random.randint(1, 100) <= self.missing_data_chance:  # chance of missing data in percentage
                 packet["temperature"] = None
-                packet["packet_id"] = self.packet_id
             if random.randint(1, 100) <= self.corrupted_data_chance:  # chance of corrupted data in percentage
                 packet["temperature"] = "corrupted"
-                packet["packet_id"] = self.packet_id
             return packet
         except Exception as e:
             print(f"Error in get_packet: {e}")

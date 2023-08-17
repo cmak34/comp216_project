@@ -25,6 +25,7 @@ class Subscriber:
         self.data_buffers = {}
         self.missing_data_points = {}
         self.corrupted_data_points = {}
+        self.out_of_range_data_points = {}
 
         self.setup_gui()
                 
@@ -50,13 +51,19 @@ class Subscriber:
                 label = None
                 if "temperature" not in data or data["temperature"] is None or data["temperature"] == "":
                     self.data_buffers[publisher].append(np.nan)
-                    label = 'missing'
+                    # label = 'missing'
                     if publisher not in self.missing_data_points:
                         self.missing_data_points[publisher] = []
                     self.missing_data_points[publisher].append(len(self.data_buffers[publisher])-1)
+                elif data["temperature"] == "out of range":
+                    self.data_buffers[publisher].append(np.nan)
+                    # label = 'out of range'
+                    if publisher not in self.out_of_range_data_points:
+                        self.out_of_range_data_points[publisher] = []
+                    self.out_of_range_data_points[publisher].append(len(self.data_buffers[publisher])-1)
                 elif data["temperature"] == "corrupted":
                     self.data_buffers[publisher].append(np.nan)
-                    label = 'corrupted'
+                    # label = 'corrupted'
                     if publisher not in self.corrupted_data_points:
                         self.corrupted_data_points[publisher] = []
                     self.corrupted_data_points[publisher].append(len(self.data_buffers[publisher])-1)
@@ -86,6 +93,18 @@ class Subscriber:
                                         va='bottom',
                                         fontsize=3)
         
+                    # Annotate out of range data points
+                    if key in self.out_of_range_data_points:
+                        for index in self.out_of_range_data_points[key]:
+                            plt.annotate("out of range",
+                                        (index, self.min_val),
+                                        color=color,
+                                        xytext=(0, 5),
+                                        textcoords="offset points",
+                                        ha='center',
+                                        va='bottom',
+                                        fontsize=3)
+                            
                     # Annotate corrupted data points
                     if key in self.corrupted_data_points:
                         for index in self.corrupted_data_points[key]:
