@@ -5,6 +5,7 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.lines as mlines
 from settings import Settings
+import numpy as np
 
 class Subscriber:
     # constructor for the subscriber class
@@ -22,6 +23,9 @@ class Subscriber:
         
         # Separate buffers for each publisher
         self.data_buffers = {}
+        self.missing_data_points = {}
+        self.corrupted_data_points = {}
+
         self.setup_gui()
                 
         try:
@@ -41,47 +45,58 @@ class Subscriber:
             # Check if self.data_buffers[publisher] exists
             if (data["station_name"] not in self.data_buffers):
                 self.data_buffers[data["station_name"]] = []
-        
-            if data is None:
-                print("Data: Missing")
-                self.data_buffers[publisher].append(None)
+            print(data)
+            label = None
+            if "temperature" not in data or data["temperature"] is None or data["temperature"] == "":
+                self.data_buffers[publisher].append(np.nan)
+                label = 'missing'
+                if publisher not in self.missing_data_points:
+                    self.missing_data_points[publisher] = []
+                self.missing_data_points[publisher].append(len(self.data_buffers[publisher])-1)
+            elif data["temperature"] == "corrupted":
+                self.data_buffers[publisher].append(np.nan)
+                label = 'corrupted'
+                if publisher not in self.corrupted_data_points:
+                    self.corrupted_data_points[publisher] = []
+                self.corrupted_data_points[publisher].append(len(self.data_buffers[publisher])-1)
             else:
-                # Check if temperature data is missing
-                if "temperature" not in data or data["temperature"] is None:
-                    print("Data: corrupted1")
-                    self.data_buffers[publisher].append(None)  # Append None to create a gap
-                # Check if temperature data is str
-                elif type(data["temperature"]) is str: 
-                    print("Data: corrupted2")
-                    self.data_buffers[publisher].append(None)  # Append None to create a gap
-                # Check if temperature data is not a number
-                elif type(data["temperature"]) is not (float):
-                    print("Data: corrupted3")
-                    self.data_buffers[publisher].append(None)  # Append None to create a gap
-                # Check if temperature data is out of range
-                elif data["temperature"] > self.max_val or data["temperature"] < self.min_val:
-                    print("Data: Temperature is out of range")
-                    self.data_buffers[publisher].append(None)  # Append None to create a gap        
-                # If data passes all checks, update the buffer
-                else:
-                    self.data_buffers[publisher].append(data['temperature'])
-        
-            # If data passes all checks, update the appropriate buffer
+                self.data_buffers[publisher].append(data['temperature'])
+
             if len(self.data_buffers[publisher]) > self.buffer_size:
                 self.data_buffers[publisher].pop(0)
         
-            # Update the plot
             plt.clf()
-            
-            # Draw lines for each publisher
-            # Add legend
             handles = []
             counter = 0
             for key, value in self.data_buffers.items():
                 color = self.generate_color(counter)
-                plt.plot(self.data_buffers[key], label=key, color= color)
+                plt.plot(self.data_buffers[key], label=key, color=color)
                 handles.append(mlines.Line2D([], [], color=color, label=key))
+                
+                # Annotate missing data points
+                if key in self.missing_data_points:
+                    for index in self.missing_data_points[key]:
+                        plt.annotate("missing",
+                                     (index, self.min_val),
+                                     color=color,
+                                     xytext=(0, 5),
+                                     textcoords="offset points",
+                                     ha='center',
+                                     va='bottom')
+    
+                # Annotate corrupted data points
+                if key in self.corrupted_data_points:
+                    for index in self.corrupted_data_points[key]:
+                        plt.annotate("corrupted",
+                                     (index, self.min_val),
+                                     color=color,
+                                     xytext=(0, 5),
+                                     textcoords="offset points",
+                                     ha='center',
+                                     va='bottom')
+                
                 counter += 1
+            
 
             plt.xlabel('Time')
             plt.ylabel('Temperature')
