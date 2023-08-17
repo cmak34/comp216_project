@@ -40,6 +40,7 @@ class GUI:
         4. Add more subscriber by clicking the "Add Subscriber" button
         5. Temperature data will be published to the broker every 1 second 
            using random values with noise and following a sine wave pattern
+           (The range of temp is 50°C to -50°C)
         """, anchor='w', justify='left')
         self.proj_description.grid(row=0, column=0, columnspan=5, sticky='nsew')
 
